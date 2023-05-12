@@ -22,7 +22,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-validation:2.7.6")
-	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.webjars:bootstrap:3.3.7-1")
 	implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 

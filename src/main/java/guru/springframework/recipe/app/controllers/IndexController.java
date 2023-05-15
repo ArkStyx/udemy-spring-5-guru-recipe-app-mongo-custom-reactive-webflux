@@ -21,10 +21,16 @@ public class IndexController {
 	@RequestMapping({"", "/", "/index"})
 	public String getIndexPage(Model model) {
 
-		List<Recipe> listeDesRecettes = recipeReactiveService.getRecipes().collectList().block();
-		log.info("getIndexPage - listeDesRecettes.size() : " + listeDesRecettes.size());
+		// TODO ANCIEN CODE
+//		List<Recipe> listeDesRecettes = recipeReactiveService.getRecipes().collectList().block();
+//		log.info("getIndexPage - listeDesRecettes.size() : " + listeDesRecettes.size());
+//		
+//		model.addAttribute("toutesLesRecettes", listeDesRecettes);
+//		return "index";
 		
-		model.addAttribute("toutesLesRecettes", listeDesRecettes);
+
+		// TODO NOUVEAU CODE - DOIT NORMALEMENT MARCHER AVEC WEBFLUX
+		model.addAttribute("toutesLesRecettes",  recipeReactiveService.getRecipes());
 		return "index";
 	}
 	

@@ -14,6 +14,7 @@ import guru.springframework.recipe.app.domain.Recipe;
 import guru.springframework.recipe.app.services.RecipeReactiveService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @AllArgsConstructor
@@ -35,8 +36,11 @@ public class RecipeController {
 	
     @GetMapping(value = "/recipe/{idRecupereDansUrl}/show")
 	public String showById(Model model, @PathVariable("idRecupereDansUrl") String id) {
-    	Recipe recipeTrouvee = recipeReactiveService.findById(id).block();
-		model.addAttribute(NOM_ATTRIBUT_DANS_TEMPLATE_THYMELEAF, recipeTrouvee);
+    	log.info("showById - id : " + id);
+    	
+    	Mono<Recipe> monoRecipe = recipeReactiveService.findById(id);
+    	
+		model.addAttribute(NOM_ATTRIBUT_DANS_TEMPLATE_THYMELEAF, monoRecipe);
 		return NOM_REPERTOIRE_THYMELEAF + SEPARATEUR_REPERTOIRE_ET_TEMPLATE_THYMELEAF + "show";
 	}
 	
@@ -48,7 +52,10 @@ public class RecipeController {
 	
     @GetMapping(value ="/recipe/{idRecupereDansUrl}/update")
 	public String updateRecipe(Model model, @PathVariable("idRecupereDansUrl") String id) {
+    	log.info("updateRecipe - id : " + id);
+    	
     	RecipeCommand recipeMiseAJour = recipeReactiveService.findCommandById(id).block();
+    	
 		model.addAttribute(NOM_ATTRIBUT_DANS_TEMPLATE_THYMELEAF, recipeMiseAJour);
 		return RECIPE_RECIPEFORM_URL;
 	}
@@ -60,7 +67,6 @@ public class RecipeController {
             bindingResult.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
             });
-
             return RECIPE_RECIPEFORM_URL;
 		}
 		
@@ -70,7 +76,7 @@ public class RecipeController {
 
     @GetMapping("recipe/{idPourSuppression}/delete")
 	public String deleteById(@PathVariable("idPourSuppression") String id) {
-		log.info("Id de la recette supprimée : " + id);
+		log.info("deleteById - id : " + id);
 		recipeReactiveService.deleteById(id);
 		return REDIRECTION;
 	}

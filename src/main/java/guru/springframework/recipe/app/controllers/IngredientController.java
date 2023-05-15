@@ -35,9 +35,8 @@ public class IngredientController {
 		log.debug("recupererListeIngredients - id : " + id);
 		
 		Mono<RecipeCommand> monoRecipeCommand = recipeReactiveService.findCommandById(id);
-		RecipeCommand recipeCommand = monoRecipeCommand.block();
-		
-		model.addAttribute("recipe", recipeCommand);
+
+		model.addAttribute("recipe", monoRecipeCommand);
 		return "recipe/ingredient/list";
 	}
 	
@@ -48,11 +47,29 @@ public class IngredientController {
 		log.debug("afficherIngredientDansRecette - idIngredient : " + idIngredient);
 		
 		Mono<IngredientCommand>  monoIngredientCommand = ingredientReactiveService.recupererParIdRecetteEtIdIngredient(idRecette, idIngredient);
-		IngredientCommand ingredientCommand = monoIngredientCommand.block();
-		
-		model.addAttribute("ingredient", ingredientCommand);
+
+		model.addAttribute("ingredient", monoIngredientCommand);
 		return "recipe/ingredient/show";
 	}
+	
+	// XXX correspondance nom methode JAVA GURU - John Thompson : newRecipe()
+    @GetMapping("recipe/{recipeId}/ingredient/new")
+    public String creerNouvelIngredient(Model model, @PathVariable("recipeId") String idRecette) {
+    	log.debug("creerNouvelIngredient - idRecette : " + idRecette);
+    	
+    	IngredientCommand ingredientCommand = new IngredientCommand();
+    	ingredientCommand.setRecipeId(idRecette);
+    	ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
+    	
+    	Mono<RecipeCommand> monoRecipeCommand = recipeReactiveService.findCommandById(idRecette);
+    	RecipeCommand recetteTrouvee = monoRecipeCommand.block();
+    	recetteTrouvee.getIngredients().add(ingredientCommand);
+    	
+        model.addAttribute("ingredient", ingredientCommand);
+        model.addAttribute("listeUnitesDeMesure", unitOfMeasureService.recupererToutesLesUnitesDeMesure());
+        
+        return "recipe/ingredient/ingredientform";
+    }
 	
 	// XXX correspondance nom methode JAVA GURU - John Thompson : updateRecipeIngredient()
     @GetMapping("recipe/{recipeId}/ingredient/{id}/update")
@@ -64,23 +81,15 @@ public class IngredientController {
 		IngredientCommand ingredient = monoIngredientCommand.block();
 
 		Flux<UnitOfMeasureCommand> fluxUnitOfMeasureCommand = unitOfMeasureService.recupererToutesLesUnitesDeMesure();
-		List<UnitOfMeasureCommand> listeUnitesDeMesure = fluxUnitOfMeasureCommand.collectList().block();
-		
+
     	model.addAttribute("ingredient", ingredient);
-    	model.addAttribute("listeUnitesDeMesure", listeUnitesDeMesure);
+    	model.addAttribute("listeUnitesDeMesure", fluxUnitOfMeasureCommand);
 		return "recipe/ingredient/ingredientform";
 	}
 
 	// XXX correspondance nom methode JAVA GURU - John Thompson : saveOrUpdate()
 	@PostMapping("recipe/{recipeId}/ingredient")
 	public String sauvegarderOuModifierIngredientDansRecette(@ModelAttribute IngredientCommand ingredientCommand) {
-		
-		
-		// TODO FIXME KO !!!!!
-		// TODO FIXME KO !!!!!
-		// TODO FIXME KO !!!!!
-		// TODO FIXME KO !!!!!
-		// TODO FIXME KO !!!!!
 		log.info("sauvegarderOuModifierIngredientDansRecette - ingredientCommand.getRecipeId() : " + ingredientCommand.getRecipeId());
 		
 		Mono<IngredientCommand> monoIngredientSauvegarde = ingredientReactiveService.sauvegarderIngredient(ingredientCommand);
@@ -94,27 +103,6 @@ public class IngredientController {
 		
 		return "redirect:/recipe/" + idRecette + "/ingredient/" + idIngredient + "/show";
 	}
-	
-	// XXX correspondance nom methode JAVA GURU - John Thompson : newIngredient() / newRecipe()
-    @GetMapping("recipe/{recipeId}/ingredient/new")
-    public String creerNouvelIngredient(Model model, @PathVariable("recipeId") String idRecette) {
-    	log.debug("creerNouvelIngredient - idRecette : " + idRecette);
-    	
-    	IngredientCommand ingredientCommand = new IngredientCommand();
-    	ingredientCommand.setRecipeId(idRecette);
-    	ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
-    	
-    	Mono<RecipeCommand> monoRecipeCommand = recipeReactiveService.findCommandById(idRecette);
-    	RecipeCommand recetteTrouvee = monoRecipeCommand.block();
-    	recetteTrouvee.getIngredients().add(ingredientCommand);
-    	
-    	List<UnitOfMeasureCommand> linkedHashSetUnitOfMeasureCommand = unitOfMeasureService.recupererToutesLesUnitesDeMesure().collectList().block();
-
-        model.addAttribute("ingredient", ingredientCommand);
-        model.addAttribute("listeUnitesDeMesure", linkedHashSetUnitOfMeasureCommand);
-        
-        return "recipe/ingredient/ingredientform";
-    }
 
 	// XXX correspondance nom methode JAVA GURU - John Thompson : deleteIngredient()
     @GetMapping("recipe/{recipeId}/ingredient/{id}/delete")

@@ -53,7 +53,6 @@ public class IngredientReactiveServiceImpl implements IngredientReactiveService 
 //
 //		return Mono.just(optionalIngredientCommand.get());
 		
-		
 		// TODO CODE JOHN THOMPSON
         return recipeReactiveRepository
                 .findById(idRecette)
@@ -65,6 +64,19 @@ public class IngredientReactiveServiceImpl implements IngredientReactiveService 
                     command.setRecipeId(idRecette);
                     return command;
                 });
+        
+        
+        /*
+        TODO FIXME    
+[2m2023-05-16 00:00:44.406[0;39m [31mERROR[0;39m [35m19280[0;39m [2m---[0;39m [2m[ctor-http-nio-3][0;39m [36ma.w.r.e.AbstractErrorWebExceptionHandler[0;39m [2m:[0;39m [6363979b-19]  500 Server Error for HTTP GET "/recipe/6462ab07090b066f0585ba4c/ingredient/734bf60e-2e55-4b86-949d-f1df32d1e850/update"
+
+java.lang.IllegalStateException: block()/blockFirst()/blockLast() are blocking, which is not supported in thread reactor-http-nio-3
+	at reactor.core.publisher.BlockingSingleSubscriber.blockingGet(BlockingSingleSubscriber.java:83) ~[reactor-core-3.4.28.jar:3.4.28]
+	Suppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException: 
+Error has been observed at the following site(s):
+	*__checkpoint ⇢ HTTP GET "/recipe/6462ab07090b066f0585ba4c/ingredient/734bf60e-2e55-4b86-949d-f1df32d1e850/update" [ExceptionHandlingWebHandler]
+        */
+        
 	}
 	
 	// XXX correspondance nom methode JAVA GURU - John Thompson : saveIngredientCommand()

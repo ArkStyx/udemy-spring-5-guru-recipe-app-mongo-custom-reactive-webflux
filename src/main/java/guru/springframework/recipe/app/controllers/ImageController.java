@@ -1,12 +1,5 @@
 package guru.springframework.recipe.app.controllers;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import guru.springframework.recipe.app.commands.RecipeCommand;
 import guru.springframework.recipe.app.services.ImageReactiveService;
 import guru.springframework.recipe.app.services.RecipeReactiveService;
 import lombok.AllArgsConstructor;
@@ -43,27 +35,29 @@ public class ImageController {
 		return "redirect:/recipe/" + id + "/show";
 	}
 	
-	@GetMapping("recipe/{id}/recipeimage")
-	public void renderImageFromDB(@PathVariable String id, HttpServletResponse response) throws IOException {
-		log.info("renderImageFromDB - id recette recherchee : " + id);
-		RecipeCommand recipeCommand = recipeReactiveService.findCommandById(id).block();
-		if (recipeCommand.getImage() == null) {
-			log.error("No Image Found");
-		}
-		else {
-			Byte[] imageDB = recipeCommand.getImage();
-			
-			int i = 0;
-			byte[] byteArray = new byte[imageDB.length];
-			for (Byte wrappedByte : imageDB) {
-				/* Auto Unboxing */
-				byteArray[i++] = wrappedByte;
-			}
-
-			response.setContentType("image/jpeg");
-			InputStream is = new ByteArrayInputStream(byteArray);
-			IOUtils.copy(is, response.getOutputStream());
-		}
-	}
+	
+	// TODO FIXME CODE A MODIFIER DANS LE FUTUR
+//	@GetMapping("recipe/{id}/recipeimage")
+//	public void renderImageFromDB(@PathVariable String id, HttpServletResponse response) throws IOException {
+//		log.info("renderImageFromDB - id recette recherchee : " + id);
+//		RecipeCommand recipeCommand = recipeReactiveService.findCommandById(id).block();
+//		if (recipeCommand.getImage() == null) {
+//			log.error("No Image Found");
+//		}
+//		else {
+//			Byte[] imageDB = recipeCommand.getImage();
+//			
+//			int i = 0;
+//			byte[] byteArray = new byte[imageDB.length];
+//			for (Byte wrappedByte : imageDB) {
+//				/* Auto Unboxing */
+//				byteArray[i++] = wrappedByte;
+//			}
+//
+//			response.setContentType("image/jpeg");
+//			InputStream is = new ByteArrayInputStream(byteArray);
+//			IOUtils.copy(is, response.getOutputStream());
+//		}
+//	}
 	
 }

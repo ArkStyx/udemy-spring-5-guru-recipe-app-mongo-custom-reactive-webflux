@@ -4,7 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,12 +56,12 @@ public class RecipeController {
 	public String updateRecipe(Model model, @PathVariable("idRecupereDansUrl") String id) {
     	log.info("updateRecipe - id : " + id);
     	
-    	RecipeCommand recipeMiseAJour = recipeReactiveService.findCommandById(id).block();
-    	
-		model.addAttribute(NOM_ATTRIBUT_DANS_TEMPLATE_THYMELEAF, recipeMiseAJour);
+    	Mono<RecipeCommand> monoRecipeCommand = recipeReactiveService.findCommandById(id);
+		model.addAttribute(NOM_ATTRIBUT_DANS_TEMPLATE_THYMELEAF, monoRecipeCommand);
+		
 		return RECIPE_RECIPEFORM_URL;
 	}
-	
+
 	@PostMapping(value = NOM_ACTION_FORM_THYMELEAF_DANS_TEMPLATE)
 	public String saveOrUpdate(@Validated @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult) {
 		

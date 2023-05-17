@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +29,7 @@ public class IngredientController {
 
 	private final RecipeReactiveService recipeReactiveService;
 	private final IngredientReactiveService ingredientReactiveService;
-	private final UnitOfMeasureReactiveService unitOfMeasureService;
+	private final UnitOfMeasureReactiveService unitOfMeasureReactiveService;
 	
 	// XXX correspondance nom methode JAVA GURU - John Thompson : listIngredients()
 	@GetMapping(value = "/recipe/{idRecetteDansUrl}/ingredients")
@@ -66,7 +68,7 @@ public class IngredientController {
     	recetteTrouvee.getIngredients().add(ingredientCommand);
     	
         model.addAttribute("ingredient", ingredientCommand);
-        model.addAttribute("listeUnitesDeMesure", unitOfMeasureService.recupererToutesLesUnitesDeMesure());
+        model.addAttribute("listeUnitesDeMesure", unitOfMeasureReactiveService.recupererToutesLesUnitesDeMesure());
         
         return "recipe/ingredient/ingredientform";
     }
@@ -89,8 +91,17 @@ public class IngredientController {
 
 	// XXX correspondance nom methode JAVA GURU - John Thompson : saveOrUpdate()
 	@PostMapping("recipe/{recipeId}/ingredient")
-	public String sauvegarderOuModifierIngredientDansRecette(@ModelAttribute IngredientCommand ingredientCommand) {
+	public String sauvegarderOuModifierIngredientDansRecette(@Validated @ModelAttribute IngredientCommand ingredientCommand, 
+															BindingResult bindingResult, @PathVariable String recipeId, Model model) {
 		log.info("sauvegarderOuModifierIngredientDansRecette - ingredientCommand.getRecipeId() : " + ingredientCommand.getRecipeId());
+		
+		if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(objectError -> {
+                log.debug(objectError.toString());
+            });
+            model.addAttribute("listeUnitesDeMesure", unitOfMeasureReactiveService.recupererToutesLesUnitesDeMesure());
+            return "recipe/ingredient/ingredientform";
+		}
 		
 		Mono<IngredientCommand> monoIngredientSauvegarde = ingredientReactiveService.sauvegarderIngredient(ingredientCommand);
 		IngredientCommand ingredientSauvegarde = monoIngredientSauvegarde.block();

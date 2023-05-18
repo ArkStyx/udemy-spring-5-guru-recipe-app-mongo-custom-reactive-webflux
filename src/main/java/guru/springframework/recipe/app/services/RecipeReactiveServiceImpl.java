@@ -54,8 +54,13 @@ public class RecipeReactiveServiceImpl implements RecipeReactiveService {
 	@Override
 	public Mono<Void> deleteById(String id) {
 		log.info("deleteById - id : " + id);
-		recipeReactiveRepository.deleteById(id).block();
-        return Mono.empty();
+		
+		// TODO FIXME ERREUR
+//		recipeReactiveRepository.deleteById(id).block();
+//		return Mono.empty();
+		
+		// TODO FIXME NE SUPPRIME RIEN
+		return recipeReactiveRepository.deleteById(id);
 	}
 
 }

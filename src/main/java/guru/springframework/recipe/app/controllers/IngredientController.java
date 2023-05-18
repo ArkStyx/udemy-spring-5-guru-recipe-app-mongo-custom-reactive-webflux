@@ -1,7 +1,5 @@
 package guru.springframework.recipe.app.controllers;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,7 +29,9 @@ public class IngredientController {
 	private final IngredientReactiveService ingredientReactiveService;
 	private final UnitOfMeasureReactiveService unitOfMeasureReactiveService;
 	
-	// XXX correspondance nom methode JAVA GURU - John Thompson : listIngredients()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : listIngredients()
+	 */
 	@GetMapping(value = "/recipe/{idRecetteDansUrl}/ingredients")
 	public String recupererListeIngredients(Model model, @PathVariable("idRecetteDansUrl") String id) {
 		log.debug("recupererListeIngredients - id : " + id);
@@ -42,7 +42,9 @@ public class IngredientController {
 		return "recipe/ingredient/list";
 	}
 	
-	// XXX correspondance nom methode JAVA GURU - John Thompson : showRecipeIngredient()
+	/* 
+	 * correspondance nom methode JAVA GURU - John Thompson : showRecipeIngredient()
+	 */
 	@GetMapping(value = "/recipe/{idRecette}/ingredient/{idIngredient}/show")
 	public String afficherIngredientDansRecette(Model model, @PathVariable String idRecette, @PathVariable String idIngredient) {
 		log.debug("afficherIngredientDansRecette - idRecette : " + idRecette);
@@ -54,7 +56,9 @@ public class IngredientController {
 		return "recipe/ingredient/show";
 	}
 	
-	// XXX correspondance nom methode JAVA GURU - John Thompson : newRecipe()
+	/* 
+	 * correspondance nom methode JAVA GURU - John Thompson : newRecipe()
+	 */
     @GetMapping("recipe/{recipeId}/ingredient/new")
     public String creerNouvelIngredient(Model model, @PathVariable("recipeId") String idRecette) {
     	log.debug("creerNouvelIngredient - idRecette : " + idRecette);
@@ -73,23 +77,27 @@ public class IngredientController {
         return "recipe/ingredient/ingredientform";
     }
 	
-	// XXX correspondance nom methode JAVA GURU - John Thompson : updateRecipeIngredient()
+	/* 
+	 * correspondance nom methode JAVA GURU - John Thompson : updateRecipeIngredient()
+	 */
     @GetMapping("recipe/{recipeId}/ingredient/{id}/update")
 	public String modifierIngredientDansRecette(Model model, @PathVariable("recipeId") String idRecette, @PathVariable("id") String idIngredient) {
 		log.debug("modifierIngredientDansRecette - idRecette : " + idRecette);
 		log.debug("modifierIngredientDansRecette - idIngredient : " + idIngredient);
     	
 		Mono<IngredientCommand>  monoIngredientCommand = ingredientReactiveService.recupererParIdRecetteEtIdIngredient(idRecette, idIngredient);
-		IngredientCommand ingredient = monoIngredientCommand.block();
+		Flux<UnitOfMeasureCommand> fluxUnitOfMeasureCommand = unitOfMeasureReactiveService.recupererToutesLesUnitesDeMesure();
 
-		Flux<UnitOfMeasureCommand> fluxUnitOfMeasureCommand = unitOfMeasureService.recupererToutesLesUnitesDeMesure();
-
-    	model.addAttribute("ingredient", ingredient);
+    	model.addAttribute("ingredient", monoIngredientCommand);
     	model.addAttribute("listeUnitesDeMesure", fluxUnitOfMeasureCommand);
 		return "recipe/ingredient/ingredientform";
 	}
 
-	// XXX correspondance nom methode JAVA GURU - John Thompson : saveOrUpdate()
+    
+    // TODO FIXME [THYMELEAF][nioEventLoopGroup-6-4] Exception processing template "recipe/ingredient/ingredientform": An error happened during template parsing (template: "class path resource [templates/recipe/ingredient/ingredientform.html]")
+	/* 
+	 * correspondance nom methode JAVA GURU - John Thompson : saveOrUpdate()
+	 */
 	@PostMapping("recipe/{recipeId}/ingredient")
 	public String sauvegarderOuModifierIngredientDansRecette(@Validated @ModelAttribute IngredientCommand ingredientCommand, 
 															BindingResult bindingResult, @PathVariable String recipeId, Model model) {
@@ -115,7 +123,9 @@ public class IngredientController {
 		return "redirect:/recipe/" + idRecette + "/ingredient/" + idIngredient + "/show";
 	}
 
-	// XXX correspondance nom methode JAVA GURU - John Thompson : deleteIngredient()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : deleteIngredient()
+	 */
     @GetMapping("recipe/{recipeId}/ingredient/{id}/delete")
     public String supprimerIngredient(@PathVariable("recipeId") String idRecette, @PathVariable("id") String idIngredient) {
 		log.debug("supprimerIngredient - idRecette : " + idRecette);

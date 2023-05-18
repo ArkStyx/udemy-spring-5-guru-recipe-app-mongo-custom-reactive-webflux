@@ -4,9 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,6 +70,8 @@ public class RecipeController {
             return RECIPE_RECIPEFORM_URL;
 		}
 		
+		
+		// TODO FIXME block()/blockFirst()/blockLast() are blocking, which is not supported in thread reactor-http-nio-2
 		RecipeCommand recetteSauvegardee = recipeReactiveService.saveRecipeCommand(command).block();
 		return REDIRECTION + "recipe/" + recetteSauvegardee.getId() + "/show";
 	}

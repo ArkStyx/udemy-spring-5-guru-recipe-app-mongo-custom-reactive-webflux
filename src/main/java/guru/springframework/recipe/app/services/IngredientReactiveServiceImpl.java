@@ -30,7 +30,9 @@ public class IngredientReactiveServiceImpl implements IngredientReactiveService 
 	private final IngredientToIngredientCommand ingredientToIngredientCommand;
 	private final IngredientCommandToIngredient ingredientCommandToIngredient;
 	
-	// XXX correspondance nom methode JAVA GURU - John Thompson : findByRecipeIdAndIngredientId()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : findByRecipeIdAndIngredientId()
+	 */
 	@Override
 	public Mono<IngredientCommand> recupererParIdRecetteEtIdIngredient(String idRecette, String idIngredient) {
 		log.info("recupererParIdRecetteEtIdIngredient - idRecette : " + idRecette);
@@ -79,7 +81,9 @@ Error has been observed at the following site(s):
         
 	}
 	
-	// XXX correspondance nom methode JAVA GURU - John Thompson : saveIngredientCommand()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : saveIngredientCommand()
+	 */
 	@Transactional
 	@Override
 	public Mono<IngredientCommand> sauvegarderIngredient(IngredientCommand ingredientCommand) {
@@ -145,38 +149,39 @@ Error has been observed at the following site(s):
 		}
 	}
 
-	// XXX correspondance nom methode JAVA GURU - John Thompson : deleteById()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : deleteById()
+	 */
 	@Override
 	public Mono<Void> supprimerIngredientDansRecetteParId(String idRecette, String idIngredient) {
-
+		log.info("supprimerIngredientDansRecetteParId - idRecette : " + idRecette + " / idIngredient : " + idIngredient);
 		Mono<Recipe> monoRecipe = recipeReactiveRepository.findById(idRecette);
 		
-		Recipe recette = monoRecipe.block();
-		if (recette == null) {
-			log.error("La recette recherchee n'existe pas - idRecette : " + idRecette);
-		}
-		else {
-			log.debug("La recette recherchee existe - idRecette : " + idRecette);
-
-			Predicate<Ingredient> filtreIdIngredient = ingredient -> ingredient.getId().equals(idIngredient);
-			Optional<Ingredient> optionalIngredient = recette.getIngredients().stream()
-																			.filter(filtreIdIngredient)
-																			.findFirst();
-			
-			if (optionalIngredient.isPresent()) {
-				log.debug("L'ingredient recherche existe - idIngredient : " + idIngredient);
-				
-                Ingredient ingredientPourSuppression = optionalIngredient.get(); 
-                recette.getIngredients().remove(ingredientPourSuppression);
-                
-                Mono<Recipe> monoRecetteSauvegardee = recipeReactiveRepository.save(recette);
-                monoRecetteSauvegardee.block();
+		// TODO FIXME NE SUPPRIME RIEN
+		monoRecipe.map(recette -> {
+			if (recette == null) {
+				log.error("La recette recherchee n'existe pas - idRecette : " + idRecette);
 			}
 			else {
-				log.error("L'ingredient recherche n'existe pas - idIngredient : " + idIngredient);
+				log.info("La recette recherchee existe - idRecette : " + idRecette);
+
+				Predicate<Ingredient> filtreIdIngredient = ingredient -> ingredient.getId().equals(idIngredient);
+				Optional<Ingredient> optionalIngredient = recette.getIngredients().stream().filter(filtreIdIngredient).findFirst();
+				if (optionalIngredient.isPresent()) {
+					log.info("L'ingredient recherche existe - idIngredient : " + idIngredient);
+					
+	                Ingredient ingredientPourSuppression = optionalIngredient.get(); 
+	                recette.getIngredients().remove(ingredientPourSuppression);
+	                
+	                Mono<Recipe> monoRecetteSauvegardee = recipeReactiveRepository.save(recette);
+	                monoRecetteSauvegardee.block();
+				}
+				else {
+					log.error("L'ingredient recherche n'existe pas - idIngredient : " + idIngredient);
+				}
 			}
-		}
-		
+			return Mono.empty();
+		});
 		return Mono.empty();
 	}
 

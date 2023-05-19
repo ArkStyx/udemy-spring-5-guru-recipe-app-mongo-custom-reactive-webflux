@@ -50,7 +50,9 @@ public class IngredientControllerTest {
 		mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
 	}
 	
-	// TODO correspondance nom methode JAVA GURU - John Thompson : testListIngredients()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : testListIngredients()
+	 */
 	@Test
 	void recupererListeIngredients() throws Exception {
 
@@ -75,7 +77,9 @@ public class IngredientControllerTest {
 
 	}
 	
-	// TODO correspondance nom methode JAVA GURU - John Thompson : testShowIngredient()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : testShowIngredient()
+	 */
 	@Test
 	void afficherIngredientDansRecette() throws Exception {
 		/* Given */
@@ -97,7 +101,9 @@ public class IngredientControllerTest {
 				andExpect(model().attributeExists("ingredient"));
 	}
 	
-	// TODO correspondance nom methode JAVA GURU - John Thompson : testUpdateIngredientForm()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : testUpdateIngredientForm()
+	 */
 	@Test
 	void modifierIngredientDansRecette() throws Exception {
 		
@@ -122,7 +128,9 @@ public class IngredientControllerTest {
     		andExpect(model().attributeExists("listeUnitesDeMesure"));
 	}
 	
-	// TODO correspondance nom methode JAVA GURU - John Thompson : testSaveOrUpdate()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : testSaveOrUpdate()
+	 */
 	@Test
 	void sauvegarderOuModifierIngredientDansRecette() throws Exception {
 
@@ -150,7 +158,9 @@ public class IngredientControllerTest {
 				andExpect(view().name("redirect:/recipe/2/ingredient/3/show"));
 	}
 	
-	// TODO correspondance nom methode JAVA GURU - John Thompson : testNewIngredientForm()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : testNewIngredientForm()
+	 */
 	@Test
 	void creerNouvelIngredient() throws Exception {
 		
@@ -175,7 +185,9 @@ public class IngredientControllerTest {
 				andExpect(model().attributeExists("listeUnitesDeMesure"));
 	}
 
-	// TODO correspondance nom methode JAVA GURU - John Thompson : testDeleteIngredient()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : testDeleteIngredient()
+	 */
 	@Test
 	void supprimerIngredient() throws Exception {
 		/* Given */

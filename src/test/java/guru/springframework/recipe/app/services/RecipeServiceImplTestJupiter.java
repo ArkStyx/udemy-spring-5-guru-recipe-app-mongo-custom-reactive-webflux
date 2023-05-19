@@ -46,8 +46,9 @@ class RecipeServiceImplTestJupiter {
 		recipeReactiveServiceImpl = new RecipeReactiveServiceImpl(recipeReactiveRepository, recipeCommandToRecipe, recipeToRecipeCommand);
 	}
 	
-	
-	// XXX correspondance nom methode JAVA GURU - John Thompson : getRecipeByIdTest()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : getRecipeByIdTest()
+	 */
 	@Test
 	void getRecipes() {
 		Recipe recetteGuacamole = new Recipe();
@@ -65,7 +66,9 @@ class RecipeServiceImplTestJupiter {
 		verify(recipeReactiveRepository, Mockito.times(1)).findAll();
 	}
 
-	// XXX correspondance nom methode JAVA GURU - John Thompson : getRecipeCommandByIdTest()
+	/*
+	 * correspondance nom methode JAVA GURU - John Thompson : getRecipeCommandByIdTest()
+	 */
 	@Test
 	void getRecipeById() {
 		Recipe recette = new Recipe();

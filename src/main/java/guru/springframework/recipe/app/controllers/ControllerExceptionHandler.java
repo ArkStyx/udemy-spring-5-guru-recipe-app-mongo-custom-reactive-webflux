@@ -1,42 +1,40 @@
 package guru.springframework.recipe.app.controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.thymeleaf.exceptions.TemplateInputException;
 
+import guru.springframework.recipe.app.exceptions.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-	
-	// TODO FIXME CODE A MODIFIER DANS LE FUTUR
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler(NumberFormatException.class)
-//    public ModelAndView handleNumberFormatException(Exception exception) {
-//    	log.error("Handling NumberFormatException");
-//        log.error(exception.getMessage());
-//    	
-//    	ModelAndView modelAndView = new ModelAndView();
-//    	modelAndView.setViewName("400error");
-//    	modelAndView.addObject("detailException", exception);
-//    	
-//    	return modelAndView;
-//    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NumberFormatException.class)
+    public String handleNumberFormatException(Exception exception, Model model) {
+    	log.error("Handling NumberFormatException");
+        log.error(exception.getMessage());
+    	
+    	model.addAttribute("detailException", exception);
+    	
+    	return "400error";
+    }
     
-    
-	// TODO FIXME CODE A MODIFIER DANS LE FUTUR
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    @ExceptionHandler(NotFoundException.class)
-//    public ModelAndView handleNotFound(Exception exception) {
-//    	log.error("Handling NotFoundException");
-//        log.error(exception.getMessage());
-//    	
-//    	ModelAndView modelAndView = new ModelAndView();
-//    	modelAndView.setViewName("404error");
-//    	modelAndView.addObject("exception", exception);
-//    	modelAndView.addObject("detailException", exception);
-//    	
-//    	return modelAndView;
-//    }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({NotFoundException.class, TemplateInputException.class})
+    public String handleNotFound(Exception exception, Model model) {
+    	log.error("Handling NotFoundException");
+        log.error(exception.getMessage());
+
+    	model.addAttribute("exception", exception);
+    	model.addAttribute("detailException", exception);
+    	
+    	return "404error";
+    }
     
 }

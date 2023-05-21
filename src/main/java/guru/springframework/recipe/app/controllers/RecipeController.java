@@ -14,6 +14,7 @@ import guru.springframework.recipe.app.domain.Recipe;
 import guru.springframework.recipe.app.services.RecipeReactiveService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -74,6 +75,48 @@ public class RecipeController {
 		// TODO FIXME block()/blockFirst()/blockLast() are blocking, which is not supported in thread reactor-http-nio-2
 		RecipeCommand recetteSauvegardee = recipeReactiveService.saveRecipeCommand(command).block();
 		return REDIRECTION + "recipe/" + recetteSauvegardee.getId() + "/show";
+		
+		
+		// FIXME KO
+//		String idRecetteSauvegardee = recipeReactiveService.saveRecipeCommand(command).map(recipeCommand -> recipeCommand.getId()).block();
+//		log.info("updateRecipe - idRecetteSauvegardee : " + idRecetteSauvegardee);
+//		return REDIRECTION + "recipe/" + idRecetteSauvegardee + "/show";
+		
+		
+		// FIXME KO
+//		Mono<String> monoString = recipeReactiveService.saveRecipeCommand(command).map(recipeCommand -> recipeCommand.getId());
+//		log.info("updateRecipe - monoString.toString() : " + monoString.toString());
+//		String idRecetteSauvegardee =  monoString.block().toString();
+//		log.info("updateRecipe - idRecetteSauvegardee : " + idRecetteSauvegardee);
+//		return REDIRECTION + "recipe/" + idRecetteSauvegardee + "/show";
+		
+		
+		// TODO FIXME KO
+//		Mono<String> monoString = recipeReactiveService.saveRecipeCommand(command).flatMap(recipeCommand -> {
+//			return Mono.just(recipeCommand.getId());
+//		});
+//		Disposable disposable = monoString.subscribe();
+//		disposable.dispose();
+//		String idRecupere = monoString.block();
+//		log.info("updateRecipe - idRecupere : " + idRecupere);
+//		return REDIRECTION + "recipe/" + idRecupere + "/show";
+		
+		
+		
+		// TODO CODE OK MAIS COMMENT L'UTILISER ????
+//		recipeReactiveService.saveRecipeCommand(command).subscribe(
+//            data -> System.out.println("data : " + data), // onNext
+//            error -> System.out.println("ERROR: " + error),  // onError
+//            () -> System.out.println("Completed!") // onComplete
+//	    );
+		
+		// TODO FIXME KO
+//		String test = "";
+//		recipeReactiveService.saveRecipeCommand(command).subscribe(value -> {
+//			  log.info("Consumed: " + value.getId());
+//			  test = value.getId();
+//		});
+//		return "";
 	}
 
     @GetMapping("recipe/{idPourSuppression}/delete")

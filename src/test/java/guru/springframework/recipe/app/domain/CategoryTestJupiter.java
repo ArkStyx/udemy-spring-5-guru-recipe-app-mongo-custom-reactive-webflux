@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /*
- * TODO On utilise Junit Jupiter (Junit 5) plutôt que Junit 4 comme dans la vidéo : https://howtodoinjava.com/junit5/junit-5-vs-junit-4/
+ * On utilise Junit Jupiter (Junit 5) plutôt que Junit 4 comme dans la vidéo : https://howtodoinjava.com/junit5/junit-5-vs-junit-4/
  */
 class CategoryTestJupiter {
 

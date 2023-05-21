@@ -72,8 +72,6 @@ public class IngredientController {
     	recetteTrouvee.getIngredients().add(ingredientCommand);
     	
         model.addAttribute("ingredient", ingredientCommand);
-        model.addAttribute("listeUnitesDeMesure", unitOfMeasureReactiveService.recupererToutesLesUnitesDeMesure());
-        
         return "recipe/ingredient/ingredientform";
     }
 	
@@ -86,10 +84,7 @@ public class IngredientController {
 		log.debug("modifierIngredientDansRecette - idIngredient : " + idIngredient);
     	
 		Mono<IngredientCommand>  monoIngredientCommand = ingredientReactiveService.recupererParIdRecetteEtIdIngredient(idRecette, idIngredient);
-		Flux<UnitOfMeasureCommand> fluxUnitOfMeasureCommand = unitOfMeasureReactiveService.recupererToutesLesUnitesDeMesure();
-
     	model.addAttribute("ingredient", monoIngredientCommand);
-    	model.addAttribute("listeUnitesDeMesure", fluxUnitOfMeasureCommand);
 		return "recipe/ingredient/ingredientform";
 	}
 
@@ -107,7 +102,6 @@ public class IngredientController {
             bindingResult.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
             });
-            model.addAttribute("listeUnitesDeMesure", unitOfMeasureReactiveService.recupererToutesLesUnitesDeMesure());
             return "recipe/ingredient/ingredientform";
 		}
 		
@@ -133,6 +127,11 @@ public class IngredientController {
     	
     	ingredientReactiveService.supprimerIngredientDansRecetteParId(idRecette, idIngredient).block();
     	return "redirect:/recipe/" + idRecette + "/ingredients";
+    }
+    
+    @ModelAttribute("listeUnitesDeMesure")
+    Flux<UnitOfMeasureCommand> populateUomList() {
+		return unitOfMeasureReactiveService.recupererToutesLesUnitesDeMesure();
     }
   
 }

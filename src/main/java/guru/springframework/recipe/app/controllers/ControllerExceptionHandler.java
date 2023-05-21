@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import org.thymeleaf.exceptions.TemplateInputException;
 
 import guru.springframework.recipe.app.exceptions.NotFoundException;
@@ -15,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ControllerExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NumberFormatException.class)
+    @ExceptionHandler({NumberFormatException.class, WebExchangeBindException.class})
     public String handleNumberFormatException(Exception exception, Model model) {
     	log.error("Handling NumberFormatException");
         log.error(exception.getMessage());

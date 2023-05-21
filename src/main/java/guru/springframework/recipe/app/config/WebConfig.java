@@ -14,7 +14,7 @@ import guru.springframework.recipe.app.services.RecipeReactiveService;
 public class WebConfig {
 
 	@Bean
-	RouterFunction<?> routes(RecipeReactiveService recipeReactiveService) {
+	public RouterFunction<?> routes(RecipeReactiveService recipeReactiveService) {
 		return RouterFunctions.route(org.springframework.web.reactive.function.server.RequestPredicates.GET("/api/recipes"), 
 				serverRequest -> ServerResponse
 										.ok()
